@@ -8,10 +8,10 @@ exports.user_authentication = ((req, res) => {
         if (user && user.isValidPassword(credentials.password)) {
             res.json({ user: user.toAuthJSON() });
         } else {
-            res.status(400).json({ errors: { message: "Invalid credentials" } });
+            res.status(400).json({ errors: { global: "Invalid credentials" } });
         }
     }).catch(e=>{
-        res.status(500).json({ errors: { message: e } });
+        res.status(500).json({ errors: { global: e.message } });
     });
 });
 
@@ -35,7 +35,7 @@ exports.reset_password_request = ((req, res) => {
         } else {
             res
                 .status(400)
-                .json({ errors: { message: "There is no user with such email" } });
+                .json({ errors: { global: "There is no user with such email" } });
         }
     });
 });
@@ -55,14 +55,14 @@ exports.reset_password = ((req, res) => {
     const { password, token } = req.body.data;
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-            res.status(401).json({ errors: { message: "Invalid token" } });
+            res.status(401).json({ errors: { global: "Invalid token" } });
         } else {
             User.findOne({ _id: decoded._id }).then(user => {
                 if (user) {
                     user.setPassword(password);
                     user.save().then(() => res.json({}));
                 } else {
-                    res.status(404).json({ errors: { message: "Invalid token" } });
+                    res.status(404).json({ errors: { global: "Invalid token" } });
                 }
             });
         }
