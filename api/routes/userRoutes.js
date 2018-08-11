@@ -6,6 +6,6 @@ module.exports = function (app) {
     app.route('/users')
         .post(user.register_user);
 
-    app.route(authenticate, '/users/:colorId')
-        .get(user.current_user);
+    app.route('/current_user')
+        .get(authenticate, user.current_user);
 };
